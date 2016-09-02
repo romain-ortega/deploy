@@ -1,0 +1,42 @@
+- name: Install git
+  apt: name=git state=present
+
+- name: Clone nanocloud
+  git: repo=git://github.com/{{repository}}/nanocloud dest=/nanocloud
+
+- name: Fetch specific Pull Request
+  command: git fetch origin pull/{{pull_request}}/head:PR-{{pull_request}}
+  args:
+    chdir: /nanocloud
+  when: pull_request is defined
+
+- name: Checkout specific Pull Request
+  command: git checkout PR-{{pull_request}}
+  args:
+    chdir: /nanocloud
+  when: pull_request is defined
+
+- name: Checkout specific branch
+  command: git checkout {{branch|default(master)}}
+  args:
+    chdir: /nanocloud
+  when:
+    - pull_request is undefined
+
+- name: Copy custom configuration
+  copy: src=roles/nanocloud/files/nanocloud/config.env dest=/nanocloud/config.env owner=root group=root mode=0644
+
+- name: Docker compose build
+  command: docker-compose build
+  args:
+    chdir: /nanocloud
+
+- name: Docker compose build development containers
+  command: docker-compose -f docker-compose-dev.yml up -d
+  args:
+    chdir: /nanocloud
+
+- name: Docker compose up
+  command: docker-compose -f docker-compose-dev.yml up -d
+  args:
+    chdir: /nanocloud

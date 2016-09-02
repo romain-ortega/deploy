@@ -1,0 +1,7 @@
+# Configuration variables set in the environment will override configuration in
+# config/env/development.js or config/env/producion.js.
+#
+# Keys for variables are identical but are capitalized and in snake case
+#
+# Example:
+iaas: 'AWS'
