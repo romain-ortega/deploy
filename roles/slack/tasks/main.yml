@@ -2,7 +2,20 @@
   uri:
     url: https://hooks.slack.com/services/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
     method: POST
-    body: '{"channel": "#technical", "username": "deplou", "text": "Pull request {{pull_request}} deployed : http://{{ansible_host}}:42{{pull_request}}."}'
+    body: '{
+      "mrkdwn": true,
+      "channel": "#technical",
+      "username": "deplou",
+      "attachments": [
+        {
+          "pretext": "New pull request submitted",
+          "title": "Pull request #{{pull_request}}",
+          "title_link": "https://github.com/Nanocloud/{{repository}}/pull/{{pull_request}}",
+          "text": "Successfully deployed <http://{{ansible_host}}:42{{pull_request}}|here>.",
+          "color": "#7CD197"
+        }
+      ]
+    }'
     body_format: json
     HEADER_Content-Type: "application/json"
   when: pull_request is defined
@@ -11,8 +24,11 @@
   uri:
     url: https://hooks.slack.com/services/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
     method: POST
-    body: '{"channel": "#technical", "username": "deplou", "text": "Branch {{branch|default(master)}} deployed : http://{{ansible_host}}/{{branch|default(master)}}."}'
+    body: '{
+      "channel": "#technical",
+      "username": "deplou",
+      "text": "Branch {{branch|default(master)}} deployed <http://{{ansible_host}}|here>."
+    }'
     body_format: json
     HEADER_Content-Type: "application/json"
-  when:
-    - pull_request is undefined
+  when: pull_request is undefined
