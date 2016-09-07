@@ -1,2 +1,2 @@
 [nanocloud]
-api ansible_host=62.210.56.85
+api ansible_host=community-qa.nanocloud.com
